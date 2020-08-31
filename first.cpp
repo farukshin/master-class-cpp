@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <regex>
+#include <unordered_map>
 
 using namespace std;
 
@@ -10,25 +11,37 @@ string toLower2(string str) {
     return str;
 }
 
+string user() {
+    string question;
+    cout << "[USER]: ";
+    getline(cin, question);
+    question = toLower2(question);
+    return question;
+}
+
+void bot(string text) {
+    cout << "[BOT]: " << text << endl;;
+}
+
 int main()
 {
+    unordered_map<string, string> database = {
+        {"hello", "oh, hello to you, human"},
+        {"how are you", "i'm good"},
+        {"what is your name", "My name is SUPER APP BOT 3000!"}
+    };
+
     string question;
-    cout << "Hello, welcom to SUPER APP BOT 3000" << endl;
-    getline(cin, question);
+    bot("Hello, welcom to AUTOMATED SUPERBOT 3000, please ask any questions:");
 
-    question = toLower2(question);
+    while (question.compare("exit")) {
+        question = user();
 
-    if (regex_match(question, regex(".*hello.*"))) {
-        cout << "Hi, how are you?\n";
+        for (auto entry : database)
+            if (regex_match(question, regex(".*" + entry.first + ".*"))) {
+                bot(entry.second);
+            }
     }
-
-    if (regex_match(question, regex(".*how are you.*"))) {
-        cout << "I'm good!\n";
-    }
-
-    if (regex_match(question, regex(".*what is your name.*"))) {
-        cout << "My name is SUPER APP BOT 3000!\n";
-    }
-
+    bot("okey, by!");
     return 0;
 }
